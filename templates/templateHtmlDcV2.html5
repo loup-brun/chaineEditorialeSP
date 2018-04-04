@@ -1,6 +1,4 @@
-<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
-[<!ENTITY % Ruby.common.attlists "IGNORE" >]>
- -->
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:dc="http://purl.org/dc/terms/"
@@ -22,10 +20,19 @@
      <meta name="DC.type" content="Text" />
      <meta name="DC.format" content="text/html" />
      <meta name="DC.type" content="journalArticle" />
+     <meta name="DC.type" class="typeArticle" content="$typeArticle$" />
      <meta name="DC.title" content="$title$" />
-     <meta name="DC.publisher" content="$publisher$" />
+     <meta name="DC.title.Main" content="$title$" />
+   $if(subtitle)$
+   <meta name="DC.title.Subtitle" content="$subtitle$" />
+   $endif$
+     <meta name="DC.publisher" class="editeur" content="$publisher$" />
+     <meta name="DC.publisher" class="producteur" content="$prod$" />
+     <meta name="DC.publisher" class="producteurNum" content="$prodnum$" />
+     <meta name="DC.publisher" class="diffuseur" content="$diffnum$" />
      <meta name="DC.language" content="$lang$" />
-     <meta name="DC.date" content="$date$" />
+     <meta name="DC.date" class="completeDate" content="$date$" />
+     <meta name="DC.date" class="year" content="$year$" />
      <meta name="DC.rights" content="$rights$" />
      <meta name="DC.source" content="$journal$" />
      <meta name="DC.relation.isPartOf" content="$dossier$" />
@@ -37,7 +44,7 @@
      <meta name="DC.identifier" content="$url_article_sp$" />
   $endif$
   $if(issnnum)$
-     <meta name="DC.identifier" content="$issnnum$" />
+     <meta name="DC.identifier" class="issn" content="$issnnum$" />
   $endif$
 
 <!--Utilisation de MARCREL pour specifier le role du "contributeur" en Dublin core
@@ -75,18 +82,22 @@
      <meta name="keywords" xml:lang="en" lang="en" content="$for(keyword_en)$$keyword_en$$sep$, $endfor$" />
   $endif$
 
-<!--  Mots cles editeurs -->
   $if(controlledKeywords)$
   $for(controlledKeywords)$
-     <meta name="DC.subject" xml:lang="fr" lang="fr" content="$controlledKeywords.label$" />
+  $if(controlledKeywords.label)$
+  <meta name="DC.subject" xml:lang="fr" lang="fr" content="$controlledKeywords.label$" />
+  $endif$
+  $if(controlledKeywords.fr)$
+  <meta name="DC.subject" xml:lang="fr" lang="fr" content="$controlledKeywords.fr$" />
+  $endif$
   $endfor$
   $endif$
 
 <!--  traducteur avec specification MARCREL -->
   $if(translator)$
   $for(translator)$
-     <meta name="DC.contributor.trl" content="$translator.forname$ $translator.surname$" />
-     <meta name="MARCREL.trl" content="$translator.forname$ $translator.surname$" />
+  <meta name="DC.contributor.trl" content="$translator.forname$ $translator.surname$" />
+  <meta name="MARCREL.trl" content="$translator.forname$ $translator.surname$" />
   $endfor$
   $endif$
 
@@ -113,6 +124,9 @@
      <meta name="citation_authors" content="$authors.forname$ $authors.surname$" />
   $endfor$
      <meta name="citation_title" content="$title$" />
+   $if(subtitle)$
+   <meta name="citation_subtitle" content="$subtitle$" />
+   $endif$
      <meta name="citation_publication_date" content="$date$" />
      <meta name="citation_online_date" content="$date$" />
      <meta name="citation_issn" content="$issnnum$" />
@@ -165,6 +179,10 @@ Schema specialise pour les revues et journaux-->
      <meta property="dc:identifier" content="$issnnum$" />
   $endif$
      <meta property="dc:title" content="$title$" />
+     <meta property="dc:title.Main" content="$title$" />
+   $if(subtitle)$
+   <meta property="dc:title.Subtitle" content="$subtitle$" />
+   $endif$
      <meta property="dc:publisher" content="$publisher$" />
      <meta property="dc:language" content="$lang$" />
      <meta property="dc:type" content="journalArticle" />
@@ -184,8 +202,14 @@ Schema specialise pour les revues et journaux-->
 
   $if(controlledKeywords)$
   $for(controlledKeywords)$
-     <meta property="dc:subject" xml:lang="fr" lang="fr" content="$controlledKeywords.label$" />
-     <link rel="dc:subject" href="$controlledKeywords.uriRameau$"/>
+  $if(controlledKeywords.label)$
+  <meta property="dc:subject" xml:lang="fr" lang="fr" content="$controlledKeywords.label$" />
+  <link rel="dc:subject" href="$controlledKeywords.uriRameau$"/>
+  $endif$
+  $if(controlledKeywords.fr)$
+  <meta property="dc:subject" xml:lang="fr" lang="fr" content="$controlledKeywords.fr$" />
+  <link rel="dc:subject" href="$controlledKeywords.url$"/>
+  $endif$
   $endfor$
   $endif$
 
@@ -206,8 +230,9 @@ Schema specialise pour les revues et journaux-->
 
 <!--Fin des metadonnees dans le Head-->
 
-<!--Balise Title pour affichage titre dans le navigateur-->
-     <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+<!--Balise Title pour affichage titre dans le navigateur--><!--
+     <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>-->
+   <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$$if(subtitle)$ : $subtitle$$endif$</title>
 
 <!--style et lien vers CSS-->
      <style type="text/css">code{white-space: pre;}</style>
@@ -215,9 +240,7 @@ Schema specialise pour les revues et journaux-->
      <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
   $endif$
   $if(highlighting-css)$
-     <style type="text/css">
-  $highlighting-css$
-     </style>
+     <style type="text/css">$highlighting-css$</style>
   $endif$
   $for(css)$
      <link rel="stylesheet" href="$css$" type="text/css" />
@@ -240,7 +263,7 @@ Schema specialise pour les revues et journaux-->
   $toc$
      </div>
   $endif$
-  
+
  <!--indexations FOAF-->
 
 <div class="indexations-foaf">
@@ -251,6 +274,7 @@ Schema specialise pour les revues et journaux-->
       <div vocab="http://xmlns.com/foaf/0.1/" typeof="Person" class="foaf-author">
        <span property="familyName">$authors.surname$</span>
        <span property="firstName">$authors.forname$</span>
+       <span property="gender">$director.gender$</span>
        <span property="openid">$authors.orcid$</span>
       </div>
      </div>
@@ -264,6 +288,7 @@ Schema specialise pour les revues et journaux-->
       <div vocab="http://xmlns.com/foaf/0.1/" typeof="Person" class="foaf-redactor">
        <span property="familyName">$redacteurDossier.surname$</span>
        <span property="firstName">$redacteurDossier.forname$</span>
+       <span property="gender">$director.gender$</span>
        <span property="openid">$redacteurDossier.orcid$</span>
       </div>
      </div>
@@ -277,6 +302,7 @@ Schema specialise pour les revues et journaux-->
       <div vocab="http://xmlns.com/foaf/0.1/" typeof="Person" class="foaf-director">
        <span property="familyName">$director.surname$</span>
        <span property="firstName">$director.forname$</span>
+       <span property="gender">$director.gender$</span>
        <span property="openid">$director.orcid$</span>
       </div>
      </div>
@@ -287,7 +313,12 @@ Schema specialise pour les revues et journaux-->
 <!--Integration schema "ScholarlyArticle"-->
      <div vocab="http://schema.org/" typeof="ScholarlyArticle" resource="#article" id="schema-scholarly-article">
 
-       <span property="name">$title$</span><br />
+       <span property="name">$title_f$</span><br />
+$if(subtitle_f)$
+$for(subtitle_f)$
+       <span property="name">$subtitle_f$</span><br />
+$endfor$
+$endif$
 
 <!--Indexation auteur de l'article-->
   $if(authors)$
@@ -312,25 +343,62 @@ Schema specialise pour les revues et journaux-->
 <!--Indexation dossier-->
   $if(dossier)$
   $for(dossier)$
-          <span property="isPartOf" typeof="PublicationVolume" resource="#periodical" class="titre_dossier">$dossier.title$</span>
+          <span property="isPartOf" typeof="PublicationVolume" resource="#periodical" class="titreDossier">$dossier.title$</span>
   $endfor$
   $endif$
+
+
+<!-- Indexation resumes -->
+    <div class="description">
+       $if(abstract)$
+       $for(abstract)$
+          <div property="description" class="resume" lang="$abstract.lang$">$abstract.text_f$</div>
+       $endfor$
+       $endif$
+    </div>
+
        </div>
 
-<!--Indexation mots cles controles-->
-       <div class="keywords" vocab="http://purl.org/dc/terms/">
-  $if(controlledKeywords)$
-  $for(controlledKeywords)$
-         <div class="$controlledKeywords.label$">
-           <span property="subject" class="label">$controlledKeywords.label$</span>,
-           <span property="subject" class="uriRameau">$controlledKeywords.uriRameau$</span>,
-           <span property="subject" class="idRameau">$controlledKeywords.idRameau$</span>,
-           <span property="subject" class="wikidata">$controlledKeywords.wikidata$</span>
-         </div>
-  $endfor$
-  $endif$
-       </div>
-     </div>
+<!-- Indexation mots cles controles -->
+$if(controlledKeywords)$
+<div class="keywords" vocab="http://purl.org/dc/terms/">
+$for(controlledKeywords)$
+$if(controlledKeywords.label)$
+  <div class="$controlledKeywords.label$" lang="">
+    <span property="subject" class="label">$controlledKeywords.label$</span>,
+    <span property="subject" class="uriRameau">$controlledKeywords.uriRameau$</span>,
+    <span property="subject" class="idRameau">$controlledKeywords.idRameau$</span>,
+    <span property="subject" class="wikidata">$controlledKeywords.wikidata$</span>
+  </div>
+$endif$
+$if(controlledKeywords.fr)$
+  <div class="$controlledKeywords.fr$" lang="fr">
+    <span property="subject" class="label">$controlledKeywords.fr$</span>,
+     <span property="subject" class="idRameau">$controlledKeywords.id$</span>,
+     <span property="subject" class="uriRameau">$controlledKeywords.url$</span>,
+  </div>
+$endif$
+$endfor$
+</div>
+$endif$
+
+</div> <!-- end Integration schema "ScholarlyArticle"-->
+
+     <!--Indexation mots cles auteurs-->
+            <div class="authorKeywords_fr" vocab="http://purl.org/dc/terms/" lang="fr">
+       $if(keyword_fr_f)$
+       $for(keyword_fr_f)$
+                <span property="subject">$keyword_fr_f$</span>
+       $endfor$
+       $endif$
+            </div>
+   <div class="authorKeywords_en" vocab="http://purl.org/dc/terms/" lang="en">
+       $if(keyword_en_f)$
+       $for(keyword_en_f)$
+                <span property="subject">$keyword_en_f$</span>
+       $endfor$
+       $endif$
+            </div>
 
 
 <!--Corps de l'article-->

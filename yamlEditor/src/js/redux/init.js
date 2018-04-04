@@ -5,7 +5,9 @@ export let init = {
    "id_sp": '',
    "bibliography": '',
    "title": "",
+   "title_f": "",
    "subtitle": '',
+   "subtitle_f": '',
    "year": '',
    "month": '',
    "day": '',
@@ -66,6 +68,8 @@ export let init = {
    ],
    "reviewers": [
    ],
+   "keyword_fr_f":'',
+   "keyword_en_f":'',
    "keyword_fr":'',
    "keyword_en":'',
    "controlledKeywords":[],
@@ -74,7 +78,7 @@ export let init = {
  },
  misc:{
    rubriques:[...[],...rubriques],
-   categories:[...[],...categories],
+   categories:[],
    uncontrolledKeywords:[],
    "keywords_fr":[],
    "keywords_en":[],
